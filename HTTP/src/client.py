@@ -59,6 +59,9 @@ def response(flow: mitmproxy.http.HTTPFlow):
         body = flow.response.content.decode("utf-8")
         resp = pickle.loads(b64decode(body))
 
+        if 'Content-Encoding' in resp.headers:
+            resp.headers.pop('Content-Encoding')
+        
         r = flow.response.make(
             status_code=resp.status_code,
             headers=dict(resp.headers),
